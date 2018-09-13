@@ -1,0 +1,30 @@
+{
+  "name": "blogi",
+  "version": "1.0.0",
+  "description": "fullstacktehtava",
+  "main": "index.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=production node index.js",
+    "watch": "cross-env NODE_ENV=development nodemon index.js",
+    "test": "cross-env NODE_ENV=test jest --verbose",
+    "lint": "eslint ."
+  },
+  "author": "Pirjo Leppänen",
+  "license": "ISC",
+  "devDependencies": {
+    "cross-env": "^5.2.0",
+    "eslint": "^5.5.0",
+    "jest": "^23.6.0",
+    "nodemon": "^1.17.5",
+    "supertest": "^3.3.0"
+  },
+  "dependencies": {
+    "cors": "^2.8.4",
+    "dotenv": "^6.0.0",
+    "express": "^4.16.3",
+    "mongoose": "^5.2.14"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  }
+}
