@@ -4,7 +4,7 @@ const Blog = require('../models/blog')
 blogsRouter.get('/', async (request, response) => {
     const blogs = await Blog
         .find({})
-    response.json(blogs.map(b => Blog.format(b)))
+    response.json(blogs.map(Blog.format))
 
 })
 

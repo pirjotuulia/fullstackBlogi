@@ -15,7 +15,8 @@ blogSchema.statics.format = (blog) => {
         author: blog.author,
         url: blog.url,
         likes: blog.likes,
-        id: blog._id
+        id: blog._id,
+        user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
     }
 }
 
