@@ -50,7 +50,7 @@ blogsRouter.post('/', async (request, response) => {
         if (body.title === undefined || body.url === undefined) {
             return response.status(400).json({ error: 'title or author missing' })
         }
-        const user = await User.findById(body.user)
+        const user = await User.findById(decodedToken.id)
 
         const blog = new Blog({
             title: body.title,
