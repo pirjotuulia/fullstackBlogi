@@ -6,13 +6,14 @@ const User = require('../models/user')
 usersRouter.get('/', async (request, response) => {
     const users = await User
         .find({})
+        .populate('blogs', { likes: 1, author: 1, title: 1, url: 1 })
     response.json(users.map(User.format))
 })
 usersRouter.post('/', async (request, response) => {
     try {
         const body = request.body
         if (!body.username || !body.password) {
-            return response.status(400).json({ error: 'username or password missing'})
+            return response.status(400).json({ error: 'username or password missing' })
         }
         const existingUser = await User.find({ username: body.username })
         if (existingUser.length > 0) {
