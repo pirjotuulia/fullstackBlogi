@@ -9,6 +9,21 @@ usersRouter.get('/', async (request, response) => {
         .populate('blogs', { likes: 1, author: 1, title: 1, url: 1 })
     response.json(users.map(User.format))
 })
+usersRouter.get('/:id', async (request, response) => {
+    try {
+        const user = await User
+            .findById(request.params.id)
+            .populate('blogs', { likes: 1, author: 1, title: 1, url: 1 })
+        if (user) {
+            response.json(User.format(user))
+        } else {
+            response.status(404).send({ message: 'not found' })
+        }
+    } catch (exception) {
+        // console.log(exception)
+        response.status(400).send({ error: 'invalid id' })
+    }
+})
 usersRouter.post('/', async (request, response) => {
     try {
         const body = request.body
@@ -35,7 +50,6 @@ usersRouter.post('/', async (request, response) => {
         })
 
         const savedUser = await user.save()
-        console.log('savedUser', savedUser)
         response.json(User.format(savedUser))
     } catch (exception) {
         console.log(exception)

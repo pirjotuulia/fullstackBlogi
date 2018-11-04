@@ -1,6 +1,7 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
+const Comment = require('../models/comment')
 const jwt = require('jsonwebtoken')
 
 
@@ -16,8 +17,8 @@ blogsRouter.get('/', async (request, response) => {
     const blogs = await Blog
         .find({})
         .populate('user', { username: 1, name: 1 })
+        .populate('comments', { comment: 1 })
     response.json(blogs.map(Blog.format))
-
 })
 
 blogsRouter.get('/:id', async (request, response) => {
@@ -36,7 +37,6 @@ blogsRouter.get('/:id', async (request, response) => {
 
 blogsRouter.post('/', async (request, response) => {
     const body = request.body
-    // console.log('post', request.token)
     try {
         const token = getTokenFrom(request)
         const decodedToken = jwt.verify(token, process.env.SECRET)
@@ -77,6 +77,28 @@ blogsRouter.post('/', async (request, response) => {
     }
 })
 
+blogsRouter.post('/:id/comments', async (request, response) => {
+    console.log(request.body)
+    const body = request.body
+    try {
+        const comment = new Comment({
+            comment: body.comment,
+            blog: request.params.id
+        })
+        const savedComment = await comment.save()
+        const blog = await Blog.findById(request.params.id)
+        blog.comments = blog.comments.concat(savedComment)
+        await blog.save()
+        const blogCommented = await Blog.findById(request.params.id)
+            .populate('user', { username: 1, name: 1 })
+            .populate('comments', { comment: 1 })
+        response.json(Blog.format(blogCommented))
+    } catch (exception) {
+        console.log(exception)
+        response.status(500).json({ error: 'something went wrong...' })
+    }
+})
+
 blogsRouter.delete('/:id', async (request, response) => {
     try {
         const token = getTokenFrom(request)
@@ -109,7 +131,8 @@ blogsRouter.put('/:id', async (request, response) => {
         title: body.title,
         author: body.author,
         url: body.url,
-        likes: body.likes
+        likes: body.likes,
+        comments: body.comments
     }
     try {
         const updatedBlog = await Blog
