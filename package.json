@@ -4,7 +4,8 @@
   "description": "fullstacktehtava",
   "main": "index.js",
   "engines": {
-    "node": "10.4.0"
+    "node": "10.4.0",
+    "npm": "6.4.1"
   },
   "scripts": {
     "start": "cross-env NODE_ENV=production node index.js",
